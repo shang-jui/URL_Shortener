@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import "./App.css";
 import TextFieldComponent from "./TextField";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -28,18 +28,17 @@ function App() {
 }
 
 function Layout() {
-  const textAreaRef = useRef(null);
   const [state, setState] = useState(status.DEFAULT);
   const [open, setOpen] = useState(false);
-  const [shortUrl, setShortUrl] = useState(
-    "https://meet.google.com/qct-aydv-ffp"
-  );
+  const [shortUrl, setShortUrl] = useState("");
 
-  function copyToClipboard(e) {
-    textAreaRef.current.select();
-    document.execCommand("copy");
-    e.target.focus();
-  }
+  const copyToClipBoard = async (copyMe) => {
+    try {
+      await navigator.clipboard.writeText(copyMe);
+    } catch (err) {
+      console.log("err", err);
+    }
+  };
   return (
     <div className="App">
       <header className="App-header">
@@ -48,6 +47,7 @@ function Layout() {
           setState={setState}
           state={state}
           setShortUrl={setShortUrl}
+          setOpen={setOpen}
         />
         <Dialog
           open={open}
@@ -69,12 +69,18 @@ function Layout() {
                 <TextField
                   id="standard-basic"
                   variant="standard"
-                  value={shortUrl}
+                  value={`https://short.sidesideeffect.io/api/${shortUrl}`}
                   css={textFieldStyle}
                   disabled
-                  ref={textAreaRef}
                 />
-                <Button variant="contained" onClick={copyToClipboard}>
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    copyToClipBoard(
+                      `https://short.sidesideeffect.io/api/${shortUrl}`
+                    )
+                  }
+                >
                   複製
                 </Button>
               </div>
@@ -83,6 +89,7 @@ function Layout() {
           <Button
             onClick={() => {
               setOpen(false);
+              setShortUrl("");
             }}
             autoFocus
           >
