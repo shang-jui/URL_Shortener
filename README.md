@@ -72,3 +72,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ## First commit
 
 First commit.
+
+## Second commit
+
+Second commit.
